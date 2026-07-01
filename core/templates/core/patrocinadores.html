@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Patrocinadores — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-acerca">
+    <h1 class="acerca-titulo">Patrocinadores</h1>
+    <p class="timeline-subtitulo">Estas organizaciones hacen posible el Cine Club Chatarra</p>
+
+    {% if sponsors %}
+    <div class="sponsors-grid">
+        {% for s in sponsors %}
+        <div class="sponsor-card">
+            <div class="sponsor-logo">
+                {% if s.logo_url %}
+                <img src="{{ s.logo_url }}" alt="{{ s.nombre }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                {% else %}
+                ★
+                {% endif %}
+            </div>
+            <h3 class="sponsor-nombre">{{ s.nombre }}</h3>
+            <p class="sponsor-desc">{{ s.descripcion }}</p>
+            {% if s.sitio_web %}
+            <a href="{{ s.sitio_web }}" target="_blank" rel="noopener" class="sponsor-link">Visitar sitio →</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="sin-funciones">Pronto tendremos información de patrocinadores.</p>
+    {% endif %}
+</section>
+{% endblock %}

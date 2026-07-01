@@ -1,0 +1,28 @@
+<!-- Tarjeta individual de función (post estilo Instagram) -->
+{% load static %}
+{% load catarra_tags %}
+<div class="tarjeta-funcion grad-{{ counter|grad_class }}" onclick="abrirModal({{ funcion.id }})">
+    <div class="tarjeta-portada">
+        {% if funcion.poster_path %}
+        <img src="{{ funcion.poster_path }}" alt="{{ funcion.titulo_pelicula }}" class="tarjeta-poster"
+             loading="lazy"
+             onerror="this.style.display='none';this.parentElement.classList.add('grad-{{ counter|grad_class }}')">
+        {% endif %}
+        <div class="tarjeta-gradiente" {% if funcion.poster_path %}style="display:none;"{% endif %}>
+            <h3 class="tarjeta-titulo">{{ funcion.titulo_pelicula }}</h3>
+        </div>
+        {% if funcion.ciclo %}
+        <span class="tarjeta-badge">{{ funcion.ciclo.nombre }}</span>
+        {% endif %}
+    </div>
+    <div class="tarjeta-info">
+        <p class="tarjeta-director">{{ funcion.director|default:"—" }}</p>
+        <p class="tarjeta-meta">
+            <span class="tarjeta-año">{{ funcion.año }}</span>
+            {% if funcion.pais %}
+            <span class="tarjeta-pais">· {{ funcion.pais }}</span>
+            {% endif %}
+        </p>
+        <p class="tarjeta-fecha">{{ funcion.fecha_funcion|default:"" }}</p>
+    </div>
+</div>

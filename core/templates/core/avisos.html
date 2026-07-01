@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Avisos — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-avisos">
+    <h1 class="pagina-titulo">Avisos</h1>
+
+    {% for aviso in avisos %}
+    <div class="{% if aviso.es_urgente %}banner-aviso banner-aviso-urgente{% else %}aviso-card{% endif %}">
+        <div>
+            <div class="banner-aviso-titulo">{{ aviso.titulo }}</div>
+            <div class="banner-aviso-texto">{{ aviso.mensaje }}</div>
+            {% if aviso.funcion %}
+            <a href="{% url 'core:detalle_funcion' aviso.funcion.pk %}">Ver función relacionada →</a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p class="sin-funciones">No hay avisos.</p>
+    {% endfor %}
+</section>
+
+<section class="feed-cabecera" style="margin-top:32px;">
+    <h2>¿Quieres recibir avisos por email?</h2>
+    <form method="post" action="{% url 'core:suscribir' %}" style="display:flex;gap:8px;margin-top:12px;max-width:400px;">
+        {% csrf_token %}
+        <input type="email" name="email" class="input-form" placeholder="tu@email.cl" required>
+        <button type="submit" class="btn-auth" style="white-space:nowrap;">Suscribirme</button>
+    </form>
+</section>
+{% endblock %}

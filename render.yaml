@@ -1,0 +1,34 @@
+# Configuración de despliegue para Render
+# IMPORTANTE: Crear proyecto gratis en supabase.com y copiar connection string
+# como DATABASE_URL en Render Environment Variables (NO usar Render Postgres)
+services:
+  - type: web
+    name: cineclubchatarra
+    env: python
+    buildCommand: ./build.sh
+    startCommand: gunicorn cineclubchatarra.wsgi:application --workers 2 --threads 2 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: cineclubchatarra.settings
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com,http://localhost:8000,http://127.0.0.1:8000"
+      - key: SITE_URL
+        sync: false
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_PASSWORD
+        sync: false
+      - key: TMDB_API_KEY
+        sync: false
+      - key: TMDB_BEARER_TOKEN
+        sync: false

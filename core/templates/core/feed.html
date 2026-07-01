@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Feed — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+{% if avisos_activos %}
+<section class="banner-avisos">
+    {% for aviso in avisos_activos %}
+    <div class="banner-aviso {% if aviso.es_urgente %}banner-aviso-urgente{% endif %}">
+        <div>
+            <div class="banner-aviso-titulo">📢 {{ aviso.titulo }}</div>
+            <div class="banner-aviso-texto">{{ aviso.mensaje|truncatechars:150 }}</div>
+        </div>
+        <a href="{% url 'core:avisos' %}" class="volver" style="color:#fff;margin:0;flex-shrink:0;">Ver avisos →</a>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+{% if encuesta_activa %}
+<div class="encuesta-banner">
+    <span>📊 <strong>{{ encuesta_activa.titulo }}</strong> — ¡Votá ahora!</span>
+    <a href="{% url 'core:encuesta_detalle' encuesta_activa.pk %}">Votar →</a>
+</div>
+{% endif %}
+
+<!-- ═══════════════════════════════════════ -->
+<!-- BARRA DE CICLOS (Stories Instagram)    -->
+<!-- ═══════════════════════════════════════ -->
+<section class="seccion-stories">
+    {% include "core/components/barra_ciclos.html" %}
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- CABECERA DEL FEED                      -->
+<!-- ═══════════════════════════════════════ -->
+<section class="feed-cabecera">
+    <div class="feed-perfil">
+        <div class="feed-avatar-grande">
+            <span>CH</span>
+        </div>
+        <div class="feed-info-perfil">
+            <h1 class="feed-nombre">Cine Chatarra</h1>
+            <p class="feed-descripcion">Cine Club autogestionado · Villarrica, Chile</p>
+            <div class="feed-stats">
+                <span><strong>{{ total_funciones }}</strong> funciones</span>
+                <span><strong>{{ total_ciclos }}</strong> ciclos</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- GRID DE FUNCIONES (Posts Instagram)     -->
+<!-- ═══════════════════════════════════════ -->
+<section class="feed-grid-seccion">
+    <div class="feed-grid">
+        {% for funcion in funciones %}
+            {% include "core/components/tarjeta_funcion.html" with counter=forloop.counter %}
+        {% empty %}
+            <p class="sin-funciones">Aún no hay funciones registradas. Vuelve pronto 🎬</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODAL — Detalle de función             -->
+<!-- ═══════════════════════════════════════ -->
+<div id="modal-funcion" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="cerrarModal()"></div>
+    <div class="modal-contenido">
+        <button class="modal-cerrar" onclick="cerrarModal()">&times;</button>
+        <div id="modal-body">
+            <p class="modal-cargando">Cargando...</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

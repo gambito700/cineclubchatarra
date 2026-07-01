@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}{{ usuario_perfil.username }} — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-perfil">
+    <div class="perfil-header">
+        <div class="perfil-avatar">{{ usuario_perfil.username|first|upper }}</div>
+        <div class="perfil-info">
+            <h1>{{ usuario_perfil.username }}</h1>
+            <p class="perfil-rol">
+                {{ usuario_perfil.get_rol_display }}
+                {% if usuario_perfil.rol == 'patrocinador' %}★{% endif %}
+            </p>
+            {% if usuario_perfil.email %}
+            <p class="perfil-rol">{{ usuario_perfil.email }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="perfil-historial">
+        <h2>🎬 Funciones a las que asististe</h2>
+        {% if asistencias %}
+        <div class="historial-lista">
+            {% for a in asistencias %}
+            <div class="historial-item">
+                <div>
+                    <div class="historial-pelicula">
+                        <a href="{% url 'core:detalle_funcion' a.funcion.pk %}">{{ a.funcion.titulo_pelicula }}</a>
+                    </div>
+                    {% if a.funcion.ciclo %}
+                    <div class="historial-fecha">{{ a.funcion.ciclo.nombre }}</div>
+                    {% endif %}
+                </div>
+                <div class="historial-fecha">{{ a.fecha_checkin|date:"d/m/Y" }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="sin-funciones">Aún no registraste asistencias. Ve al detalle de una función y haz check-in.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

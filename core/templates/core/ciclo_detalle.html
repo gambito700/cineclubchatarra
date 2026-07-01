@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}{{ ciclo.nombre }} — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-ciclo">
+    <div class="ciclo-header">
+        <a href="{% url 'core:feed' %}" class="volver">&larr; Volver al feed</a>
+        <h1 class="ciclo-titulo">{{ ciclo.nombre }}</h1>
+        {% if ciclo.descripcion %}
+        <p class="ciclo-descripcion">{{ ciclo.descripcion }}</p>
+        {% endif %}
+        <div class="ciclo-fechas">
+            {% if ciclo.fecha_inicio %}
+            <span>{{ ciclo.fecha_inicio|date:"F Y" }}</span>
+            {% endif %}
+            {% if ciclo.fecha_fin %}
+            <span> — {{ ciclo.fecha_fin|date:"F Y" }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="ciclo-funciones">
+        {% for funcion in funciones %}
+        <div class="funcion-item" onclick="location.href='{% url 'core:detalle_funcion' funcion.id %}'">
+            <div class="funcion-portada-peq grad-{{ forloop.counter }}">
+                <h3>{{ funcion.titulo_pelicula }}</h3>
+            </div>
+            <div class="funcion-detalle">
+                <h4>{{ funcion.titulo_pelicula }}</h4>
+                <p><strong>Director/a:</strong> {{ funcion.director|default:"—" }}</p>
+                <p><strong>Año:</strong> {{ funcion.año|default:"—" }}</p>
+                <p><strong>País:</strong> {{ funcion.pais|default:"—" }}</p>
+                {% if funcion.fecha_funcion %}
+                <p><strong>Fecha:</strong> {{ funcion.fecha_funcion }}</p>
+                {% endif %}
+                {% if funcion.tipo %}
+                <span class="badge-tipo">{{ funcion.tipo }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

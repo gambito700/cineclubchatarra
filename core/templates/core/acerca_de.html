@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Acerca de — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-acerca">
+    <h1 class="acerca-titulo">Cine Club Chatarra</h1>
+
+    <div class="acerca-intro">
+        <p>Cine Club autogestionado de Villarrica, Araucanía. Desde agosto de 2023 proyectamos cine gratuito, independiente y diverso. Creemos en el cine como herramienta de encuentro comunitario, diálogo y pensamiento crítico.</p>
+    </div>
+
+    <!-- Estadísticas -->
+    <section class="acerca-stats">
+        <div class="stat-card">
+            <span class="stat-numero">{{ stats.total_funciones }}</span>
+            <span class="stat-label">Funciones</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-numero">{{ stats.total_ciclos }}</span>
+            <span class="stat-label">Ciclos</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-numero">{{ stats.total_directores }}</span>
+            <span class="stat-label">Directores</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-numero">{{ stats.total_paises }}</span>
+            <span class="stat-label">Países</span>
+        </div>
+    </section>
+
+    <!-- Locaciones -->
+    <section class="acerca-locaciones">
+        <h2>Locaciones</h2>
+        <div class="locaciones-timeline">
+            {% for loc in locaciones %}
+            <div class="locacion-item">
+                <div class="locacion-punto"></div>
+                <div class="locacion-info">
+                    <h3>{{ loc.nombre }}</h3>
+                    {% if loc.direccion %}<p>{{ loc.direccion }}</p>{% endif %}
+                    <p class="locacion-periodo">
+                        {% if loc.periodo_inicio %}{{ loc.periodo_inicio }}{% endif %}
+                        {% if loc.periodo_fin %} — {{ loc.periodo_fin }}{% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Eventos especiales -->
+    <section class="acerca-eventos">
+        <h2>Eventos Especiales</h2>
+        <ul class="eventos-lista">
+            {% for evento in eventos %}
+            <li>
+                <strong>{{ evento.fecha }}</strong> — {{ evento.titulo }}
+                {% if evento.descripcion %}
+                <p class="evento-desc">{{ evento.descripcion }}</p>
+                {% endif %}
+            </li>
+            {% empty %}
+            <li>No hay eventos registrados.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <div class="acerca-contacto">
+        <p>📧 Administración: Mauricio Santana</p>
+        <p>📍 Villarrica, Araucanía, Chile</p>
+    </div>
+</section>
+{% endblock %}

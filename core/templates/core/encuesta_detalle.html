@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}{{ encuesta.titulo }} — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-encuestas">
+    <a href="{% url 'core:encuestas' %}" class="volver">&larr; Volver a encuestas</a>
+
+    <div class="encuesta-card">
+        <h1 class="encuesta-titulo">{{ encuesta.titulo }}</h1>
+        <p class="encuesta-desc">{{ encuesta.descripcion }}</p>
+        <p class="encuesta-meta">{{ encuesta.total_votos }} votos</p>
+
+        {% if request.user.is_authenticated and not ya_voto and encuesta.activa %}
+        <form method="post" style="margin-top:16px;">
+            {% csrf_token %}
+            {% for opcion in encuesta.opciones.all %}
+            <button type="submit" name="opcion" value="{{ opcion.pk }}" class="opcion-voto">
+                {{ opcion.texto }}
+            </button>
+            {% endfor %}
+        </form>
+        {% elif ya_voto and encuesta.mostrar_resultados %}
+        <div style="margin-top:16px;">
+            <p style="color:var(--acento3);font-weight:600;margin-bottom:12px;">
+                ✅ Votaste por: {{ voto_usuario.opcion.texto }}
+            </p>
+            {% for opcion in encuesta.opciones.all %}
+            {% with votos_opcion=opcion.voto_set.count %}
+            {% with porcentaje=votos_opcion|floatformat %}
+            <div class="opcion-voto {% if opcion == voto_usuario.opcion %}seleccionada{% endif %}" style="cursor:default;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span>{{ opcion.texto }}</span>
+                    <span>{{ votos_opcion }} votos</span>
+                </div>
+                <div class="barra-resultado">
+                    {% if encuesta.total_votos > 0 %}
+                    <div class="barra-lleno" style="width:{% widthratio votos_opcion encuesta.total_votos 100 %}%;"></div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endwith %}
+            {% endwith %}
+            {% endfor %}
+        </div>
+        {% elif not request.user.is_authenticated %}
+        <p style="margin-top:16px;color:var(--texto-secundario);">
+            <a href="{% url 'accounts:login' %}">Inicia sesión</a> para votar.
+        </p>
+        {% elif not encuesta.activa %}
+        <p style="margin-top:16px;color:var(--texto-secundario);">Esta encuesta está cerrada.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

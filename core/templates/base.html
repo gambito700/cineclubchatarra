@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Cine Chatarra{% endblock %} — Cine Club Chatarra</title>
+    <link rel="stylesheet" href="{% static 'core/css/estilo.css' %}">
+</head>
+<body class="{% if request.COOKIES.modo_oscuro == 'true' %}modo-oscuro{% endif %}">
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NAVBAR — Barra de navegación superior   -->
+    <!-- ═══════════════════════════════════════ -->
+    <nav class="navbar">
+        <div class="nav-contenedor">
+            <a href="{% url 'core:feed' %}" class="nav-logo">
+                <span class="logo-icono">🎬</span>
+                <span class="logo-texto">Cine Chatarra</span>
+            </a>
+            <div class="nav-enlaces">
+                <a href="{% url 'core:feed' %}" class="nav-link {% if request.resolver_match.url_name == 'feed' %}activo{% endif %}">
+                    Feed
+                </a>
+                <a href="{% url 'core:linea_tiempo' %}" class="nav-link {% if request.resolver_match.url_name == 'linea_tiempo' %}activo{% endif %}">
+                    Timeline
+                </a>
+                <a href="{% url 'core:acerca_de' %}" class="nav-link {% if request.resolver_match.url_name == 'acerca_de' %}activo{% endif %}">
+                    Acerca
+                </a>
+                {% if user.is_authenticated %}
+                    {% if es_admin %}
+                    <a href="{% url 'core:avisos' %}" class="nav-link">Avisos</a>
+                    <a href="/admin/" class="nav-link">Admin</a>
+                    {% endif %}
+                    {% if es_patrocinador or es_admin %}
+                    <a href="{% url 'core:sala_patrocinadores' %}" class="nav-link nav-sponsor">★ Sala</a>
+                    {% endif %}
+                    <span class="nav-usuario">{{ user.username }}</span>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-modo" title="Cerrar sesión">🚪</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="nav-link">Entrar</a>
+                    <a href="{% url 'accounts:registro' %}" class="nav-link nav-link-destacado">Registro</a>
+                {% endif %}
+                <button id="toggle-modo" class="btn-modo" title="Cambiar modo claro/oscuro">
+                    <span id="icono-modo">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MENSAJES FLASH                          -->
+    <!-- ═══════════════════════════════════════ -->
+    {% if messages %}
+    <div class="mensajes-flash">
+        {% for message in messages %}
+        <div class="mensaje mensaje-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CONTENIDO PRINCIPAL                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <main class="contenido-principal">
+        {% block contenido %}
+        {% endblock %}
+    </main>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- FOOTER                                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <footer class="footer">
+        <div class="footer-contenedor">
+            <p>Cine Club Chatarra — Villarrica, Araucanía, Chile</p>
+            <p>🖤 Autogestionado, comunitario y gratuito desde 2023</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'core/js/app.js' %}"></script>
+</body>
+</html>

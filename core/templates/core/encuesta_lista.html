@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Encuestas — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-encuestas">
+    <h1 class="pagina-titulo">Encuestas</h1>
+    <p class="timeline-subtitulo">Votá por tus películas y ciclos favoritos</p>
+
+    {% for encuesta in encuestas %}
+    <div class="encuesta-card">
+        <h2 class="encuesta-titulo">
+            <a href="{% url 'core:encuesta_detalle' encuesta.pk %}">{{ encuesta.titulo }}</a>
+        </h2>
+        <p class="encuesta-desc">{{ encuesta.descripcion }}</p>
+        <p class="encuesta-meta">
+            {{ encuesta.total_votos }} votos ·
+            {% if encuesta.activa %}🟢 Activa{% else %}🔴 Cerrada{% endif %}
+            {% if encuesta.fecha_cierre %} · Cierre: {{ encuesta.fecha_cierre|date:"d/m/Y" }}{% endif %}
+        </p>
+    </div>
+    {% empty %}
+    <p class="sin-funciones">No hay encuestas aún.</p>
+    {% endfor %}
+</section>
+{% endblock %}

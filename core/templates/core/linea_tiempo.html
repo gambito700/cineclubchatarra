@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Línea de Tiempo — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-timeline">
+    <h1 class="timeline-titulo">Línea de Tiempo</h1>
+    <p class="timeline-subtitulo">Todos los ciclos de Cine Chatarra desde 2023</p>
+
+    <div class="timeline">
+        {% for ciclo in ciclos %}
+        <div class="timeline-item">
+            <div class="timeline-marcador grad-{{ forloop.counter }}"></div>
+            <div class="timeline-contenido">
+                <div class="timeline-header">
+                    <h2>
+                        <a href="{% url 'core:detalle_ciclo' ciclo.slug %}">{{ ciclo.nombre }}</a>
+                    </h2>
+                    {% if ciclo.fecha_inicio %}
+                    <span class="timeline-fecha">
+                        {{ ciclo.fecha_inicio|date:"M Y" }}
+                        {% if ciclo.fecha_fin %} — {{ ciclo.fecha_fin|date:"M Y" }}{% endif %}
+                    </span>
+                    {% endif %}
+                </div>
+                {% if ciclo.descripcion %}
+                <p class="timeline-desc">{{ ciclo.descripcion|truncatechars:200 }}</p>
+                {% endif %}
+                {% with total=ciclo.funciones.count %}
+                <span class="timeline-count">{{ total }} película{{ total|pluralize:',s' }}</span>
+                {% endwith %}
+                <div class="timeline-peliculas">
+                    {% for funcion in ciclo.funciones.all|slice:":4" %}
+                    <span class="timeline-pill">{{ funcion.titulo_pelicula }}</span>
+                    {% endfor %}
+                    {% if ciclo.funciones.count > 4 %}
+                    <span class="timeline-pill mas">+{{ ciclo.funciones.count|add:"-4" }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

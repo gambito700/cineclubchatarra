@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}{{ funcion.titulo_pelicula }} — Cine Chatarra{% endblock %}
+
+{% block contenido %}
+<section class="pagina-funcion">
+    <a href="{% url 'core:feed' %}" class="volver">&larr; Volver al feed</a>
+
+    <div class="funcion-detalle-completo">
+        {% if funcion.poster_path %}
+        <img src="{{ funcion.poster_path }}" alt="{{ funcion.titulo_pelicula }}" class="funcion-poster-grande">
+        {% else %}
+        <div class="funcion-portada-grande grad-1">
+            <h1 class="funcion-titulo-grande">{{ funcion.titulo_pelicula }}</h1>
+        </div>
+        {% endif %}
+
+        <div class="funcion-info-completa">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+                <h2>{{ funcion.titulo_pelicula }}</h2>
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'core:checkin' funcion.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-checkin {% if ya_asistio %}hecho{% endif %}">
+                        {% if ya_asistio %}✅ Estuviste ahí{% else %}🎬 Yo estuve ahí{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            <p class="checkin-count">👥 {{ total_asistencias }} asistieron</p>
+
+            <table class="funcion-tabla">
+                <tr>
+                    <th>Director/a</th>
+                    <td>{{ funcion.director|default:"—" }}</td>
+                </tr>
+                <tr>
+                    <th>Año</th>
+                    <td>{{ funcion.año|default:"—" }}</td>
+                </tr>
+                <tr>
+                    <th>País</th>
+                    <td>{{ funcion.pais|default:"—" }}</td>
+                </tr>
+                {% if funcion.ciclo %}
+                <tr>
+                    <th>Ciclo</th>
+                    <td>
+                        <a href="{% url 'core:detalle_ciclo' funcion.ciclo.slug %}">{{ funcion.ciclo.nombre }}</a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if funcion.fecha_funcion %}
+                <tr>
+                    <th>Fecha de función</th>
+                    <td>{{ funcion.fecha_funcion }}</td>
+                </tr>
+                {% endif %}
+                {% if funcion.hora %}
+                <tr>
+                    <th>Horario</th>
+                    <td>{{ funcion.hora }}</td>
+                </tr>
+                {% endif %}
+                {% if funcion.locacion %}
+                <tr>
+                    <th>Lugar</th>
+                    <td>{{ funcion.locacion }}</td>
+                </tr>
+                {% endif %}
+                {% if funcion.tipo %}
+                <tr>
+                    <th>Tipo</th>
+                    <td><span class="badge-tipo">{{ funcion.tipo }}</span></td>
+                </tr>
+                {% endif %}
+            </table>
+
+            {% if funcion.sinopsis %}
+            <div class="funcion-sinopsis">
+                <h3>Sinopsis</h3>
+                <p>{{ funcion.sinopsis }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

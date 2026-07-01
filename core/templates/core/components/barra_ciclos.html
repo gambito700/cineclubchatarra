@@ -1,0 +1,14 @@
+<!-- Barra horizontal de ciclos (stories tipo Instagram) -->
+{% load static %}
+<div class="barra-ciclos">
+    <div class="barra-ciclos-contenedor">
+        {% for ciclo in ciclos %}
+        <a href="{% url 'core:detalle_ciclo' ciclo.slug %}" class="ciclo-circulo" title="{{ ciclo.nombre }}">
+            <div class="ciclo-avatar grad-{{ forloop.counter0|add:'1' }}">
+                <span class="ciclo-iniciales">{{ ciclo.nombre|slice:":2" }}</span>
+            </div>
+            <span class="ciclo-nombre">{{ ciclo.nombre|truncatechars:18 }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
