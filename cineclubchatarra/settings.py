@@ -131,7 +131,7 @@ elif SENDGRID_API_KEY:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='cine_chatarra@gmail.com')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='cinechatarra911@gmail.com')
 
 # ─── Seguridad SSL (solo en producción) ───
 if not DEBUG:
